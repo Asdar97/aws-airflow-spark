@@ -1,0 +1,5 @@
+aws_default:
+  conn_type: aws
+  login: ##############
+  password: ##############
+  extra: {"region_name": "ap-southeast-1"}

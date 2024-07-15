@@ -1,0 +1,63 @@
+[
+    {
+        "Name": "Move raw data from S3 to HDFS",
+        "ActionOnFailure": "CANCEL_AND_WAIT",
+        "HadoopJarStep": {
+            "Jar": "command-runner.jar",
+            "Args": [
+                "s3-dist-cp",
+                "--src=s3://{{ params.BUCKET_NAME }}/{{ params.S3_DATA }}",
+                "--dest=/input"
+            ]
+        }
+    },
+    {
+        "Name": "Analyze e-wallet transactions",
+        "ActionOnFailure": "CANCEL_AND_WAIT",
+        "HadoopJarStep": {
+            "Jar": "command-runner.jar",
+            "Args": [
+                "spark-submit",
+                "--deploy-mode",
+                "client",
+                "s3://{{ params.BUCKET_NAME }}/{{ params.S3_SCRIPT }}"
+            ]
+        }
+    },
+    {
+        "Name": "Move clean data from HDFS to S3",
+        "ActionOnFailure": "CANCEL_AND_WAIT",
+        "HadoopJarStep": {
+            "Jar": "command-runner.jar",
+            "Args": [
+                "s3-dist-cp",
+                "--src=/output/clean_data",
+                "--dest=s3://{{ params.BUCKET_NAME }}/{{ params.S3_OUTPUT }}/clean_data"
+            ]
+        }
+    },
+    {
+        "Name": "Move user summary from HDFS to S3",
+        "ActionOnFailure": "CANCEL_AND_WAIT",
+        "HadoopJarStep": {
+            "Jar": "command-runner.jar",
+            "Args": [
+                "s3-dist-cp",
+                "--src=/output/user_summary",
+                "--dest=s3://{{ params.BUCKET_NAME }}/{{ params.S3_OUTPUT }}/user_summary"
+            ]
+        }
+    },
+    {
+        "Name": "Move category summary from HDFS to S3",
+        "ActionOnFailure": "CANCEL_AND_WAIT",
+        "HadoopJarStep": {
+            "Jar": "command-runner.jar",
+            "Args": [
+                "s3-dist-cp",
+                "--src=/output/category_summary",
+                "--dest=s3://{{ params.BUCKET_NAME }}/{{ params.S3_OUTPUT }}/category_summary"
+            ]
+        }
+    }
+]

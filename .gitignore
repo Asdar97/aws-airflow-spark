@@ -1,0 +1,4 @@
+.env
+config/airflow-connections.yaml
+logs/
+__pycache__/
